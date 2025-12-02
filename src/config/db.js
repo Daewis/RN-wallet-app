@@ -1,20 +1,21 @@
 // config/db.js
-import 'dotenv/config';         // loads variables before we use them
 import pg from 'pg';
-
-
-
+import dotenv from 'dotenv';
+dotenv.config();
 const { Pool } = pg;
 
+
+const isLocalDatabase = process.env.DATABASE_URL && (
+    process.env.DATABASE_URL.includes('localhost') || 
+    process.env.DATABASE_URL.includes('127.0.0.1')
+);
+
 const pool = new Pool({
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  database: process.env.DB_NAME,
+    connectionString: process.env.DATABASE_URL,
+    ssl: isLocalDatabase ? false : { rejectUnauthorized: false } 
 });
 
-// Optional quick connection test
+//Testing Connection
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
     console.error('Database connection error:', err);
@@ -23,7 +24,8 @@ pool.query('SELECT NOW()', (err, res) => {
   }
 });
 
-export default pool;
+
+export default pool; 
 
 
  export async function initDB() {
