@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
-if(process.env.NODE_ENV === "production") job.start();
+//if(process.env.NODE_ENV === "production") job.start();
 
 //middleware
 app.use(rateLimiterMiddleware);
